@@ -80,7 +80,9 @@ class YLPhotoCell: UICollectionViewCell {
     
     func updatePhoto(_ photo: YLPhoto) {
     
+        scrollView.setZoomScale(1, animated: false)
         imageView.image = nil
+        progressView.isHidden = true
         
         if photo.imageUrl != "" {
             
