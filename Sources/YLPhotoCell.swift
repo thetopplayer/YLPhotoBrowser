@@ -69,13 +69,17 @@ class YLPhotoCell: UICollectionViewCell {
         
         addSubview(progressView)
         
+        // progressView 约束
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        let pConstraintsW = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 40)
+        let pConstraintsH = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 40)
+        let pConstraintsCX = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
+        let pConstraintsCY = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
+        NSLayoutConstraint.activate([pConstraintsW,pConstraintsH,pConstraintsCX,pConstraintsCY])
     }
     
     func updatePhoto(_ photo: YLPhoto) {
     
-        progressView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        progressView.center = scrollView.center
-        
         imageView.image = nil
         
         if photo.imageUrl != "" {
