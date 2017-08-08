@@ -125,6 +125,26 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         // 转场过渡的容器view
         if let containerView = transitionContext?.containerView {
             
+            if transitionOriginalImgFrame == CGRect.zero ||
+                transitionImage == nil {
+                
+                UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                    
+                    self?.blackBgView?.alpha = 0
+                    
+                }, completion: { [weak self] (finished:Bool) in
+                    
+                    self?.blackBgView?.removeFromSuperview()
+                    
+                    transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
+                    
+                    self?.fromView?.isHidden = false
+                    self?.toView?.isHidden = false
+                })
+                
+                return
+            }
+            
             // 过度的图片
             let transitionImgView = UIImageView.init(image: transitionImage)
             transitionImgView.clipsToBounds = true

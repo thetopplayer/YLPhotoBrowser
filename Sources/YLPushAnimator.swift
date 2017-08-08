@@ -34,7 +34,8 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.addSubview(toView!)
         toView?.isHidden = true
         
-        if transitionOriginalImgFrame == CGRect.zero {
+        if transitionOriginalImgFrame == CGRect.zero ||
+            transitionImage == nil {
             
             toView?.isHidden = false
             toView?.alpha = 0
@@ -63,21 +64,10 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         transitionImgView.frame = self.transitionOriginalImgFrame
         containerView.addSubview(transitionImgView)
         
-        // 如果没有过度图片
-        if transitionImage == nil {
-            transitionImgView.backgroundColor = UIColor.black
-            transitionImgView.alpha = 0.1
-            
-        }
-        
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
             transitionImgView.frame = (self?.transitionBrowserImgFrame)!
             bgView.alpha = 1
-            
-            if self?.transitionImage == nil {
-                transitionImgView.alpha = 0
-            }
             
         }) { (finished:Bool) in
             

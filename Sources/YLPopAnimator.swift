@@ -40,7 +40,8 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         bgView.alpha = 1
         containerView.addSubview(bgView)
         
-        if transitionOriginalImgFrame == CGRect.zero {
+        if transitionOriginalImgFrame == CGRect.zero ||
+            transitionImage == nil {
             
             UIView.animate(withDuration: 0.3, animations: {
                 
@@ -62,20 +63,10 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         transitionImgView.frame = self.transitionBrowserImgFrame
         containerView.addSubview(transitionImgView)
         
-        // // 如果没有过度图片
-        if transitionImage == nil {
-            transitionImgView.backgroundColor = UIColor.black
-            transitionImgView.alpha = 0.5
-        }
-        
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
             transitionImgView.frame = (self?.transitionOriginalImgFrame)!
             bgView.alpha = 0
-            
-            if self?.transitionImage == nil {
-                transitionImgView.alpha = 0
-            }
             
         }) { (finished:Bool) in
             
