@@ -25,6 +25,11 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
             percentIntractive.transitionImage = transitionImage
         }
     }
+    var transitionImageView: UIView? {
+        didSet {
+            percentIntractive.transitionImageView = transitionImageView
+        }
+    }
     var gestureRecognizer: UIPanGestureRecognizer! {
         didSet {
             percentIntractive.gestureRecognizer = gestureRecognizer
@@ -39,7 +44,7 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
         
     }
     
-    convenience init(_ transitionImage: UIImage?,transitionOriginalImgFrame: CGRect? ,transitionBrowserImgFrame: CGRect?) {
+    convenience init(_ transitionImage: UIImage?,transitionImageView: UIView?,transitionOriginalImgFrame: CGRect? ,transitionBrowserImgFrame: CGRect?) {
         self.init()
         
         customPush.transitionOriginalImgFrame = transitionOriginalImgFrame ?? CGRect.zero
@@ -48,6 +53,8 @@ class YLAnimatedTransition: NSObject,UIViewControllerTransitioningDelegate {
         customPop.transitionBrowserImgFrame = transitionBrowserImgFrame ?? CGRect.zero
         customPush.transitionImage = transitionImage
         customPop.transitionImage = transitionImage
+        customPush.transitionImageView = transitionImageView
+        customPop.transitionImageView = transitionImageView
 
     }
     

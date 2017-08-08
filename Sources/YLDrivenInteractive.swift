@@ -13,6 +13,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     var transitionOriginalImgFrame: CGRect = CGRect.zero
     var transitionBrowserImgFrame: CGRect = CGRect.zero
     var transitionImage: UIImage?
+    var transitionImageView: UIView?
     
     var gestureRecognizer: UIPanGestureRecognizer! {
         didSet {
@@ -126,7 +127,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         if let containerView = transitionContext?.containerView {
             
             if transitionOriginalImgFrame == CGRect.zero ||
-                transitionImage == nil {
+                (transitionImage == nil && transitionImageView == nil) {
                 
                 UIView.animate(withDuration: 0.3, animations: { [weak self] in
                     
@@ -146,7 +147,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             }
             
             // 过度的图片
-            let transitionImgView = UIImageView.init(image: transitionImage)
+            let transitionImgView = transitionImageView ?? UIImageView.init(image: transitionImage)
             transitionImgView.clipsToBounds = true
             transitionImgView.frame = transitionBrowserImgFrame
             containerView.addSubview(transitionImgView)
