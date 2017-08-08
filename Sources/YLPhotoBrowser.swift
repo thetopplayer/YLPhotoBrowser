@@ -79,8 +79,7 @@ public class YLPhotoBrowser: UIViewController {
             ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
             
             collectionView.reloadData()
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1) { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 self?.collectionView.scrollToItem(at: IndexPath.init(row: self?.currentIndex ?? 0, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
             }
         }
