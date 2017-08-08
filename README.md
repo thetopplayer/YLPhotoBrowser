@@ -21,7 +21,18 @@ pod 'YLPhotoBrowser-Swift'
 ```swift
 var photos = [YLPhoto]()  
 photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: frame))  
-let photoBrowser = YLPhotoBrowser.init(photos, index: index)  
+let photoBrowser = YLPhotoBrowser.init(photos, index: index)
+
+// 可选
+// 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
+photoBrowser.getTransitionImageView = { (index: Int, image: UIImage?, isBack: Bool) -> UIView? in
+    if isBack == false {
+        return nil
+    }
+    let messagePhotoImageView = ChatPhotoImageView(frame: CGRect.zero)
+    return messagePhotoImageView
+}
+
 present(photoBrowser, animated: true, completion: nil)
 ```
 

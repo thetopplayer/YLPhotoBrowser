@@ -142,7 +142,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         
         let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)
         
-        // 自定义过度图片(比如聊天界面带三角形的图片) 默认是矩形图片
+        // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
         photoBrowser.getTransitionImageView = { (currentIndex: Int,image: UIImage?, isBack: Bool) -> UIView? in
         
             return nil

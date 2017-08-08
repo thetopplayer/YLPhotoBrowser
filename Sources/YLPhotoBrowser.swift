@@ -21,7 +21,7 @@ public typealias GetTransitionImageView = (_ currentIndex: Int,_ image: UIImage?
 
 public class YLPhotoBrowser: UIViewController {
     
-    // 自定义过度图片(比如聊天界面带三角形的图片) 默认是矩形图片
+    // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
     public var getTransitionImageView:GetTransitionImageView? {
         didSet {
             if let photo = photos?[currentIndex] {
