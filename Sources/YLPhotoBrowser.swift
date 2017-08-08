@@ -254,9 +254,9 @@ public class YLPhotoBrowser: UIViewController {
                 }else {
                     
                     currentImageView?.isHidden = true
-                    disappearAnimatedTransition?.currentImage = photos?[currentIndex].image
-                    disappearAnimatedTransition?.currentImageViewFrame = currentImageView?.frame ?? CGRect.zero
-                    disappearAnimatedTransition?.beforeImageViewFrame = photos?[currentIndex].frame ?? CGRect.zero
+                    disappearAnimatedTransition?.transitionImage = photos?[currentIndex].image
+                    disappearAnimatedTransition?.transitionBrowserImgFrame = currentImageView?.frame ?? CGRect.zero
+                    disappearAnimatedTransition?.transitionOriginalImgFrame = photos?[currentIndex].frame ?? CGRect.zero
                 }
                 
                 break
@@ -340,17 +340,17 @@ public class YLPhotoBrowser: UIViewController {
         
         let currentImageView = getCurrentImageView()
         
-        var afterImgFrame = CGRect.zero
+        var transitionBrowserImgFrame = CGRect.zero
         if currentImageView != nil {
-            afterImgFrame = (currentImageView?.frame)!
+            transitionBrowserImgFrame = (currentImageView?.frame)!
         }else if photo.image != nil {
-            afterImgFrame = YLPhotoBrowser.getImageViewFrame((photo.image?.size)!)
+            transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame((photo.image?.size)!)
         }else {
-            afterImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
+            transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
         }
         
         appearAnimatedTransition = nil
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, beforeImgFrame: photo.frame, afterImgFrame:afterImgFrame)
+        appearAnimatedTransition = YLAnimatedTransition.init(photo.image, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
         
         self.transitioningDelegate = appearAnimatedTransition
         

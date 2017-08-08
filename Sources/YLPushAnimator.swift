@@ -11,8 +11,8 @@ import UIKit
 class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
     
     var transitionImage: UIImage?
-    var transitionBeforeImgFrame: CGRect = CGRect.zero
-    var transitionAfterImgFrame: CGRect = CGRect.zero
+    var transitionOriginalImgFrame: CGRect = CGRect.zero
+    var transitionBrowserImgFrame: CGRect = CGRect.zero
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
@@ -34,7 +34,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         containerView.addSubview(toView!)
         toView?.isHidden = true
         
-        if transitionBeforeImgFrame == CGRect.zero {
+        if transitionOriginalImgFrame == CGRect.zero {
             
             toView?.isHidden = false
             toView?.alpha = 0
@@ -60,7 +60,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         
         // 过渡的图片
         let transitionImgView = UIImageView.init(image: self.transitionImage)
-        transitionImgView.frame = self.transitionBeforeImgFrame
+        transitionImgView.frame = self.transitionOriginalImgFrame
         containerView.addSubview(transitionImgView)
         
         // 如果没有过度图片
@@ -72,7 +72,7 @@ class YLPushAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
-            transitionImgView.frame = (self?.transitionAfterImgFrame)!
+            transitionImgView.frame = (self?.transitionBrowserImgFrame)!
             bgView.alpha = 1
             
             if self?.transitionImage == nil {

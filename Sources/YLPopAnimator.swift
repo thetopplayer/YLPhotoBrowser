@@ -11,8 +11,8 @@ import UIKit
 class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
     
     var transitionImage: UIImage?
-    var transitionBeforeImgFrame: CGRect = CGRect.zero
-    var transitionAfterImgFrame: CGRect = CGRect.zero
+    var transitionOriginalImgFrame: CGRect = CGRect.zero
+    var transitionBrowserImgFrame: CGRect = CGRect.zero
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
@@ -40,7 +40,7 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         bgView.alpha = 1
         containerView.addSubview(bgView)
         
-        if transitionBeforeImgFrame == CGRect.zero {
+        if transitionOriginalImgFrame == CGRect.zero {
             
             UIView.animate(withDuration: 0.3, animations: {
                 
@@ -59,7 +59,7 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         
         // 过渡的图片
         let transitionImgView = UIImageView.init(image: self.transitionImage)
-        transitionImgView.frame = self.transitionAfterImgFrame
+        transitionImgView.frame = self.transitionBrowserImgFrame
         containerView.addSubview(transitionImgView)
         
         // // 如果没有过度图片
@@ -70,7 +70,7 @@ class YLPopAnimator: NSObject,UIViewControllerAnimatedTransitioning {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
             
-            transitionImgView.frame = (self?.transitionBeforeImgFrame)!
+            transitionImgView.frame = (self?.transitionOriginalImgFrame)!
             bgView.alpha = 0
             
             if self?.transitionImage == nil {
