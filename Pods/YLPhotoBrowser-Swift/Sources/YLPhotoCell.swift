@@ -93,7 +93,10 @@ class YLPhotoCell: UICollectionViewCell {
             
             progressView.isHidden = false
             
-            KingfisherManager.shared.retrieveImage(with: URL(string: photo.imageUrl)!, options: [.transition(.fade(1))], progressBlock: { [weak self] (receivedSize:Int64, totalSize:Int64) in
+            KingfisherManager.shared
+                .retrieveImage(with: URL(string: photo.imageUrl)!,
+                               options: [.preloadAllAnimationData,.transition(.fade(1))],
+                               progressBlock: { [weak self] (receivedSize:Int64, totalSize:Int64) in
                 
                 self?.progressView.progress = CGFloat(receivedSize) / CGFloat(totalSize)
                 
@@ -110,7 +113,7 @@ class YLPhotoCell: UICollectionViewCell {
                     self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
                 })
                 self?.imageView.image = img
-                photo.image = image
+                photo.image = img
                 
                 self?.scrollView.contentSize = self?.imageView.frame.size ?? CGSize.zero
                 

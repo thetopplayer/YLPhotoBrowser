@@ -16,7 +16,7 @@
 pod 'YLPhotoBrowser-Swift' 
 ```
 
-# 使用  使用 -> 简单易用,拖拽取消 
+# 使用 
 
 ```swift
 var photos = [YLPhoto]()  
