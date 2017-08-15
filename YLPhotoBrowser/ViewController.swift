@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import YLPhotoBrowser_Swift
+import YLPhotoBrowser_Swift
 
 class ViewController: UIViewController {
     
@@ -89,8 +89,8 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             }
             
         }else {
-//            let url = dataArray[indexPath.row]
-//            imageView.kf.setImage(with: URL.init(string: url))
+            let url = dataArray[indexPath.row]
+            imageView.kf.setImage(with: URL.init(string: url))
         }
         
         cell.addSubview(imageView)
