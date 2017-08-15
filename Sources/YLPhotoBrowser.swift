@@ -12,6 +12,7 @@ import Kingfisher
 
 let PhotoBrowserBG = UIColor.black
 let ImageViewTag = 1000
+let CoverViewTag = 10000
 
 var ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
 var YLScreenW = UIScreen.main.bounds.width
@@ -19,16 +20,21 @@ var YLScreenH = UIScreen.main.bounds.height
 
 public typealias GetTransitionImageView = (_ currentIndex: Int,_ image: UIImage?,_ isBack: Bool) -> (UIView?)
 
+public typealias GetViewOnTheBrowser = (_ currentIndex: Int) -> (UIView?)
+
 public class YLPhotoBrowser: UIViewController {
     
     // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
-    public var getTransitionImageView:GetTransitionImageView? {
+    public var getTransitionImageView: GetTransitionImageView? {
         didSet {
             if let photo = photos?[currentIndex] {
                 editTransitioningDelegate(photo,isBack: false)
             }
         }
     }
+    
+    // 每张图片上的 View 视图
+    public var getViewOnTheBrowser: GetViewOnTheBrowser?
     
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
@@ -392,6 +398,18 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
         if let photo = photos?[indexPath.row] {
             cell.updatePhoto(photo)
+            
+            if let coverView = getViewOnTheBrowser?(indexPath.row) {
+                coverView.tag = CoverViewTag
+                
+                if let subView = cell.viewWithTag(CoverViewTag) {
+                    subView.removeFromSuperview()
+                }
+                
+                coverView.frame = cell.bounds
+                cell.addSubview(coverView)
+            }
+            
         }
         
         return cell
