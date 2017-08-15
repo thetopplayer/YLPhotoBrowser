@@ -345,7 +345,7 @@ public class YLPhotoBrowser: UIViewController {
             let isCached = KingfisherManager.shared.cache.isImageCached(forKey: photo.imageUrl).cached
             
             if isCached {
-                KingfisherManager.shared.retrieveImage(with: URL.init(string: photo.imageUrl)!, options: nil, progressBlock: nil, completionHandler: { (image:Image?, _, _, _) in
+                KingfisherManager.shared.retrieveImage(with: URL.init(string: photo.imageUrl)!, options: [.preloadAllAnimationData,.transition(.fade(1))], progressBlock: nil, completionHandler: { (image:Image?, _, _, _) in
                     photo.image = image
                 })
             }
