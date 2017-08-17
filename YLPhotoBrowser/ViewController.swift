@@ -157,7 +157,6 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         photoBrowser.getViewOnTheBrowser = { [weak self] (currentIndex: Int) -> UIView? in
         
             let view = UIView()
-            view.isUserInteractionEnabled = false
             view.backgroundColor = UIColor.clear
             
             let label = UILabel()

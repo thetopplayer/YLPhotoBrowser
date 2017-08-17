@@ -190,4 +190,13 @@ extension YLPhotoCell: UIGestureRecognizerDelegate {
         return false
     }
     
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // 系统找到的最合适的view
+        let view = super.hitTest(point, with: event)
+        // 如果最合适的view 是 用于用户自定义的View 则传递给 scrollView
+        if view?.tag == CoverViewTag {
+            return scrollView
+        }
+        return view
+    }
 }
