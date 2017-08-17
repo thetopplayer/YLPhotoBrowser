@@ -32,8 +32,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         gestureRecognizer = nil
     }
     
-    
-    
     func gestureRecognizeDidUpdate(_ gestureRecognizer: UIPanGestureRecognizer) {
         
         let translation = gestureRecognizer.translation(in:  gestureRecognizer.view)
@@ -123,6 +121,8 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         
         let transitionContext = self.transitionContext
         
+        fromView?.isHidden = true
+        
         // 转场过渡的容器view
         if let containerView = transitionContext?.containerView {
             
@@ -139,8 +139,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
                     
                     transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
                     
-                    self?.fromView?.isHidden = false
-                    self?.toView?.isHidden = false
                 })
                 
                 return
@@ -164,8 +162,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
                 
                 transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
                 
-                self?.fromView?.isHidden = false
-                self?.toView?.isHidden = false
             }
         }
     }

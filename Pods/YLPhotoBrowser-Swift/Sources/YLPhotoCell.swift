@@ -11,6 +11,8 @@ import Kingfisher
 
 class YLPhotoCell: UICollectionViewCell {
     
+    var panGestureRecognizer: UIPanGestureRecognizer?
+    
     let scrollView: UIScrollView = {
         let sv = UIScrollView(frame: CGRect.zero)
         sv.showsHorizontalScrollIndicator = false
@@ -79,7 +81,12 @@ class YLPhotoCell: UICollectionViewCell {
     }
     
     func updatePhoto(_ photo: YLPhoto) {
-    
+        
+        if let pan = panGestureRecognizer {
+            pan.delegate = self
+            scrollView.panGestureRecognizer.require(toFail: pan)
+        }
+        
         scrollView.setZoomScale(1, animated: false)
         imageView.image = nil
         progressView.isHidden = true
@@ -97,27 +104,27 @@ class YLPhotoCell: UICollectionViewCell {
                 .retrieveImage(with: URL(string: photo.imageUrl)!,
                                options: [.preloadAllAnimationData,.transition(.fade(1))],
                                progressBlock: { [weak self] (receivedSize:Int64, totalSize:Int64) in
-                
-                self?.progressView.progress = CGFloat(receivedSize) / CGFloat(totalSize)
-                
-            }, completionHandler: { [weak self] (image:Image?, _, _, _) in
-                
-                self?.progressView.isHidden = true
-                
-                guard let img = image else {
-                    
-                    return
-                }
-                
-                UIView.animate(withDuration: 0.3, animations: {
-                    self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
+                                
+                                self?.progressView.progress = CGFloat(receivedSize) / CGFloat(totalSize)
+                                
+                    }, completionHandler: { [weak self] (image:Image?, _, _, _) in
+                        
+                        self?.progressView.isHidden = true
+                        
+                        guard let img = image else {
+                            
+                            return
+                        }
+                        
+                        UIView.animate(withDuration: 0.3, animations: {
+                            self?.imageView.frame = YLPhotoBrowser.getImageViewFrame(img.size)
+                        })
+                        self?.imageView.image = img
+                        photo.image = img
+                        
+                        self?.scrollView.contentSize = self?.imageView.frame.size ?? CGSize.zero
+                        
                 })
-                self?.imageView.image = img
-                photo.image = img
-                
-                self?.scrollView.contentSize = self?.imageView.frame.size ?? CGSize.zero
-                
-            })
             
         }else if let image = photo.image {
             
@@ -152,4 +159,44 @@ extension YLPhotoCell: UIScrollViewDelegate {
         
     }
     
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension YLPhotoCell: UIGestureRecognizerDelegate {
+    
+    func isScrollViewOnTopOrBottom(_ pan:UIPanGestureRecognizer) -> Bool {
+        
+        let translation = pan.translation(in:  pan.view)
+        
+        if translation.y > 0 && scrollView.contentOffset.y <= 0 {
+            return true
+        }
+        
+        //        let maxOffsetY = floor(scrollView.contentSize.height - scrollView.bounds.size.height)
+        //        if translation.y < 0 && scrollView.contentOffset.y >= maxOffsetY {
+        //            return true
+        //        }
+        return false
+    }
+    
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        if gestureRecognizer is UIPanGestureRecognizer &&
+            gestureRecognizer.state == UIGestureRecognizerState.possible {
+            if isScrollViewOnTopOrBottom(gestureRecognizer as! UIPanGestureRecognizer) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        // 系统找到的最合适的view
+        let view = super.hitTest(point, with: event)
+        // 如果最合适的view 是 用于用户自定义的View 则传递给 scrollView
+        if view?.tag == CoverViewTag {
+            return scrollView
+        }
+        return view
+    }
 }
