@@ -45,6 +45,15 @@ public class YLPhotoBrowser: UIViewController {
     fileprivate var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
     
+    var panGestureRecognizer: UIPanGestureRecognizer!
+    var transitionImageView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.backgroundColor = UIColor.clear
+        imgView.contentMode = UIViewContentMode.scaleAspectFit
+        imgView.isHidden = true
+        return imgView
+    }()
+    
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -53,6 +62,7 @@ public class YLPhotoBrowser: UIViewController {
     
     deinit {
         removeObserver(self, forKeyPath: "view.frame")
+        panGestureRecognizer = nil
         getTransitionImageView = nil
         transitioningDelegate = nil
         appearAnimatedTransition = nil
@@ -79,7 +89,7 @@ public class YLPhotoBrowser: UIViewController {
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == "view.frame" {
-        
+            
             YLScreenW = view.bounds.width
             YLScreenH = view.bounds.height
             ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
@@ -97,7 +107,9 @@ public class YLPhotoBrowser: UIViewController {
         
         view.isUserInteractionEnabled = true
         
-        view.addGestureRecognizer(UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:))))
+        panGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:)))
+        view.addGestureRecognizer(panGestureRecognizer!)
+        
         let singleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.singleTap))
         view.addGestureRecognizer(singleTap)
         let doubleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.doubleTap))
@@ -161,6 +173,8 @@ public class YLPhotoBrowser: UIViewController {
             
         }
         
+        view.addSubview(transitionImageView)
+        
         view.layoutIfNeeded()
     }
     
@@ -223,6 +237,13 @@ public class YLPhotoBrowser: UIViewController {
                 return
             }
             
+            if transitionImageView.isHidden == true {
+                currentImageView?.isHidden = true
+                transitionImageView.isHidden = false
+                transitionImageView.image = currentImageView?.image
+                transitionImageView.frame = currentImageView?.frame ?? CGRect.zero
+            }
+            
             scrollView.delegate = nil
             
             let translation = pan.translation(in:  pan.view)
@@ -247,22 +268,23 @@ public class YLPhotoBrowser: UIViewController {
                 break
             case .changed:
                 
-                currentImageView?.transform = CGAffineTransform.init(scaleX: scale, y: scale)
+                transitionImageView.frame.size = CGSize.init(width: (currentImageView?.frame.size.width ?? 0) * scale, height: (currentImageView?.frame.size.height ?? 0) * scale)
                 
-                currentImageView?.center = CGPoint.init(x: ImageViewCenter.x + translation.x * scale, y: ImageViewCenter.y + translation.y * scale)
+                transitionImageView.frame.origin = CGPoint.init(x: (currentImageView?.frame.origin.x ?? 0) + translation.x, y: (currentImageView?.frame.origin.y ?? 0) + translation.y)
                 
                 break
             case .failed,.cancelled,.ended:
                 
                 if translation.y <= 80 {
                     UIView.animate(withDuration: 0.2, animations: {
-                    
-                        currentImageView?.center = ImageViewCenter
-                        currentImageView?.transform = CGAffineTransform.init(scaleX: 1, y: 1)
-                        }, completion: { (finished: Bool) in
-                            
-                            currentImageView?.transform = CGAffineTransform.identity
-                            
+                        
+                        self.transitionImageView.frame = YLPhotoBrowser.getImageViewFrame(self.photos?[self.currentIndex].image?.size ?? CGSize.zero)
+                        
+                    }, completion: { (finished: Bool) in
+                        
+                        self.transitionImageView.isHidden = true
+                        currentImageView?.isHidden = false
+                        
                     })
                     
                     let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
@@ -270,11 +292,11 @@ public class YLPhotoBrowser: UIViewController {
                     
                 }else {
                     
-                    currentImageView?.isHidden = true
-                     let imageView = getTransitionImageView?(currentIndex,photos?[currentIndex].image,true)
+                    transitionImageView.isHidden = true
+                    let imageView = getTransitionImageView?(currentIndex,photos?[currentIndex].image,true)
                     disappearAnimatedTransition?.transitionImage = photos?[currentIndex].image
                     disappearAnimatedTransition?.transitionImageView = imageView
-                    disappearAnimatedTransition?.transitionBrowserImgFrame = currentImageView?.frame ?? CGRect.zero
+                    disappearAnimatedTransition?.transitionBrowserImgFrame = transitionImageView.frame
                     disappearAnimatedTransition?.transitionOriginalImgFrame = photos?[currentIndex].frame ?? CGRect.zero
                 }
                 
@@ -288,7 +310,7 @@ public class YLPhotoBrowser: UIViewController {
     class func getImageViewFrame(_ size: CGSize) -> CGRect {
         
         if YLScreenW < YLScreenH {
-        
+            
             if size.width > YLScreenW {
                 let height = YLScreenW * (size.height / size.width)
                 if height <= YLScreenH {
@@ -305,9 +327,9 @@ public class YLPhotoBrowser: UIViewController {
                 let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
                 return frame
             }
-        
+            
         }else {
-        
+            
             if size.height > YLScreenH {
                 let width = YLScreenH * (size.width / size.height)
                 if width <= YLScreenW {
@@ -397,6 +419,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         let cell: YLPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! YLPhotoCell
         
         if let photo = photos?[indexPath.row] {
+            cell.panGestureRecognizer = panGestureRecognizer
             cell.updatePhoto(photo)
             
             if let coverView = getViewOnTheBrowser?(indexPath.row) {

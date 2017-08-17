@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YLPhotoBrowser_Swift
+//import YLPhotoBrowser_Swift
 
 class ViewController: UIViewController {
     
@@ -50,6 +50,9 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func tap() {
+        print("点击")
+    }
     
 }
 
@@ -151,9 +154,10 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         }
         
         // 每张图片上的 View 视图
-        photoBrowser.getViewOnTheBrowser = { (currentIndex: Int) -> UIView? in
+        photoBrowser.getViewOnTheBrowser = { [weak self] (currentIndex: Int) -> UIView? in
         
             let view = UIView()
+            view.isUserInteractionEnabled = false
             view.backgroundColor = UIColor.clear
             
             let label = UILabel()
@@ -166,6 +170,9 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             let lConstraintsTop = NSLayoutConstraint.init(item: label, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 40)
             
             NSLayoutConstraint.activate([lConstraintsCX,lConstraintsTop])
+            label.backgroundColor = UIColor.blue
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(ViewController.tap)))
             
             return view
         }
