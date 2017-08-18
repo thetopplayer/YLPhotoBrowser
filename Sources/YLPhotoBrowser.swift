@@ -42,11 +42,10 @@ public class YLPhotoBrowser: UIViewController {
     fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
     fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
     
-    fileprivate var collectionView:UICollectionView!
+    var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
     
-    var panGestureRecognizer: UIPanGestureRecognizer!
-    var transitionImageViewFrame = CGRect.zero
+    
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -55,7 +54,6 @@ public class YLPhotoBrowser: UIViewController {
     
     deinit {
         removeObserver(self, forKeyPath: "view.frame")
-        panGestureRecognizer = nil
         getTransitionImageView = nil
         transitioningDelegate = nil
         appearAnimatedTransition = nil
@@ -99,9 +97,6 @@ public class YLPhotoBrowser: UIViewController {
         view.backgroundColor = PhotoBrowserBG
         
         view.isUserInteractionEnabled = true
-        
-        panGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.pan(_:)))
-        view.addGestureRecognizer(panGestureRecognizer!)
         
         let singleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.singleTap))
         view.addGestureRecognizer(singleTap)
@@ -207,79 +202,6 @@ public class YLPhotoBrowser: UIViewController {
                 scrollView.setZoomScale(scale, animated: true)
             }else {
                 scrollView.setZoomScale(1, animated: true)
-            }
-        }
-        
-    }
-    
-    // 慢移手势
-    func pan(_ pan: UIPanGestureRecognizer) {
-        
-        let currentImageView = getCurrentImageView()
-        
-        if currentImageView == nil {
-            return
-        }else if currentImageView?.image == nil {
-            return
-        }else if currentImageView?.superview is UIScrollView {
-            
-            let scrollView = currentImageView?.superview as! UIScrollView
-            if scrollView.zoomScale != 1 {
-                return
-            }
-
-            let translation = pan.translation(in:  pan.view)
-            
-            var scale = 1 - translation.y / YLScreenH
-            
-            scale = scale > 1 ? 1:scale
-            scale = scale < 0 ? 0:scale
-            
-            switch pan.state {
-            case .possible:
-                break
-            case .began:
-                
-                transitionImageViewFrame = currentImageView?.frame ?? CGRect.zero
-                scrollView.delegate = nil
-                
-                disappearAnimatedTransition = nil
-                disappearAnimatedTransition = YLAnimatedTransition()
-                disappearAnimatedTransition?.gestureRecognizer = pan
-                self.transitioningDelegate = disappearAnimatedTransition
-                
-                dismiss(animated: true, completion: nil)
-                
-                break
-            case .changed:
-                
-                currentImageView?.frame.size = CGSize.init(width: transitionImageViewFrame.size.width * scale, height: transitionImageViewFrame.size.height * scale)
-                
-                currentImageView?.frame.origin = CGPoint.init(x: transitionImageViewFrame.origin.x + translation.x, y: transitionImageViewFrame.origin.y + translation.y)
-                
-                break
-            case .failed,.cancelled,.ended:
-                
-                if translation.y <= 80 {
-                    
-                    UIView.animate(withDuration: 0.2, animations: {
-                        currentImageView?.frame = self.transitionImageViewFrame
-                    })
-                    
-                    let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0))
-                    scrollView.delegate = cell as! UIScrollViewDelegate?
-                    
-                }else {
-                    
-                    currentImageView?.isHidden = true
-                    let imageView = getTransitionImageView?(currentIndex,photos?[currentIndex].image,true)
-                    disappearAnimatedTransition?.transitionImage = photos?[currentIndex].image
-                    disappearAnimatedTransition?.transitionImageView = imageView
-                    disappearAnimatedTransition?.transitionBrowserImgFrame = currentImageView?.frame
-                    disappearAnimatedTransition?.transitionOriginalImgFrame = photos?[currentIndex].frame ?? CGRect.zero
-                }
-                
-                break
             }
         }
         
@@ -398,8 +320,9 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         let cell: YLPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! YLPhotoCell
         
         if let photo = photos?[indexPath.row] {
-            cell.panGestureRecognizer = panGestureRecognizer
+            
             cell.updatePhoto(photo)
+            cell.delegate = self
             
             if let coverView = getViewOnTheBrowser?(indexPath.row) {
                 coverView.tag = CoverViewTag
@@ -431,4 +354,29 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
             pageControl?.currentPage = currentIndex
         }
     }
+}
+
+extension YLPhotoBrowser: YLPhotoCellDelegate {
+
+    func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer) {
+        
+        disappearAnimatedTransition = nil
+        disappearAnimatedTransition = YLAnimatedTransition()
+        disappearAnimatedTransition?.gestureRecognizer = pan
+        self.transitioningDelegate = disappearAnimatedTransition
+        
+        dismiss(animated: true, completion: nil)
+        
+    }
+    
+    func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect) {
+        
+        let imageView = getTransitionImageView?(currentIndex,photos?[currentIndex].image,true)
+        disappearAnimatedTransition?.transitionImage = photos?[currentIndex].image
+        disappearAnimatedTransition?.transitionImageView = imageView
+        disappearAnimatedTransition?.transitionBrowserImgFrame = currentImageViewFrame
+        disappearAnimatedTransition?.transitionOriginalImgFrame = photos?[currentIndex].frame ?? CGRect.zero
+        
+    }
+    
 }
