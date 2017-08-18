@@ -176,24 +176,28 @@ public class YLPhotoBrowser: UIViewController {
     // 双击手势
     func doubleTap() {
         
-        let currentImageView = getCurrentImageView()
+        if let imageView = getCurrentImageView(),
+            let scrollView = imageView.superview as? UIScrollView,
+            let image = imageView.image {
         
-        if currentImageView == nil {
-            return
-        }else if currentImageView?.image == nil {
-            return
-        }
-        
-        if currentImageView?.superview is UIScrollView {
-            let scrollView = currentImageView?.superview as! UIScrollView
             if scrollView.zoomScale == 1 {
                 
                 var scale:CGFloat = 0
                 
                 if YLScreenW < YLScreenH {
-                    scale = YLScreenH / (currentImageView?.frame.size.height ?? YLScreenH)
+                    let height = YLPhotoBrowser.getImageViewFrame(image.size).height
+                    if height >= YLScreenH {
+                        scale = 2
+                    }else {
+                        scale = YLScreenH / height
+                    }
                 }else {
-                    scale = YLScreenW / (currentImageView?.frame.size.width ?? YLScreenW)
+                    let width = YLPhotoBrowser.getImageViewFrame(image.size).width
+                    if width >= YLScreenW {
+                        scale = 2
+                    }else {
+                        scale = YLScreenW / width
+                    }
                 }
                 
                 scale = scale > 4 ? 4: scale
@@ -203,50 +207,35 @@ public class YLPhotoBrowser: UIViewController {
             }else {
                 scrollView.setZoomScale(1, animated: true)
             }
-        }
         
+        }
     }
     
     // 获取imageView frame
     class func getImageViewFrame(_ size: CGSize) -> CGRect {
         
-        if YLScreenW < YLScreenH {
-            
-            if size.width > YLScreenW {
-                let height = YLScreenW * (size.height / size.width)
-                if height <= YLScreenH {
-                    
-                    let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
-                    return frame
-                }else {
-                    
-                    let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
-                    return frame
-                    
-                }
-            }else {
-                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
+        if size.width > YLScreenW {
+            let height = YLScreenW * (size.height / size.width)
+            if height <= YLScreenH {
+                
+                let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
                 return frame
+            }else {
+                
+                let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
+                return frame
+                
             }
-            
         }else {
             
-            if size.height > YLScreenH {
-                let width = YLScreenH * (size.width / size.height)
-                if width <= YLScreenW {
-                    let frame = CGRect.init(x: YLScreenW/2 - width/2, y: 0, width: width, height: YLScreenH)
-                    return frame
-                }else {
-                    
-                    let frame = CGRect.init(x: 0, y: 0, width: width, height: YLScreenH)
-                    
-                    return frame
-                    
-                }
-            }else {
+            if size.height <= YLScreenH {
                 let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
                 return frame
+            }else {
+                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: 0, width: size.width, height: size.height)
+                return frame
             }
+            
         }
     }
     
