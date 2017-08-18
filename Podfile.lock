@@ -1,6 +1,6 @@
 PODS:
   - Kingfisher (3.11.0)
-  - YLPhotoBrowser-Swift (0.1.8):
+  - YLPhotoBrowser-Swift (0.1.9):
     - Kingfisher
 
 DEPENDENCIES:
@@ -8,7 +8,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Kingfisher: c8911a7672c6217dec8c0520fb6e76ec4b7e0780
-  YLPhotoBrowser-Swift: 3315c349d3c31d6eff39bd072a7bf4c361b4f750
+  YLPhotoBrowser-Swift: ee55b25a2f8197d2cf523270761e82e9892bbcdf
 
 PODFILE CHECKSUM: e74bbf6e51d94cf1520771a2bd7415694037fb37
 

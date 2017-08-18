@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import YLPhotoBrowser_Swift
+import YLPhotoBrowser_Swift
 
 class ViewController: UIViewController {
     
