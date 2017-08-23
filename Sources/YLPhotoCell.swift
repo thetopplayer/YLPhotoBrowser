@@ -99,7 +99,7 @@ class YLPhotoCell: UICollectionViewCell {
             return
         }
         
-        let translation = pan.translation(in:  pan.view)
+        let translation = pan.translation(in:  pan.view?.superview)
         
         var scale = 1 - translation.y / YLScreenH
         
@@ -121,7 +121,7 @@ class YLPhotoCell: UICollectionViewCell {
             
             imageView.frame.size = CGSize.init(width: transitionImageViewFrame.size.width * scale, height: transitionImageViewFrame.size.height * scale)
             
-            imageView.frame.origin = CGPoint.init(x: transitionImageViewFrame.origin.x + translation.x, y: transitionImageViewFrame.origin.y + translation.y)
+            imageView.frame.origin = CGPoint.init(x: transitionImageViewFrame.origin.x + (transitionImageViewFrame.size.width - imageView.frame.size.width) / 2  + translation.x, y: transitionImageViewFrame.origin.y + translation.y)
            
             break
         case .failed,.cancelled,.ended:
@@ -239,7 +239,7 @@ extension YLPhotoCell: UIGestureRecognizerDelegate {
     
     func isScrollViewOnTopOrBottom(_ pan:UIPanGestureRecognizer) -> Bool {
         
-        let translation = pan.translation(in:  pan.view)
+        let translation = pan.translation(in:  pan.view?.superview)
         
         if translation.y > 0 && scrollView.contentOffset.y <= 0 {
             return true
