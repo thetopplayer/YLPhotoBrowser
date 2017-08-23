@@ -34,7 +34,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
     
     func gestureRecognizeDidUpdate(_ gestureRecognizer: UIPanGestureRecognizer) {
         
-        let translation = gestureRecognizer.translation(in:  gestureRecognizer.view)
+        let translation = gestureRecognizer.translation(in:  gestureRecognizer.view?.superview)
         
         var scale = 1 - translation.y / YLScreenH
         
