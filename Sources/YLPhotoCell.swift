@@ -65,6 +65,7 @@ class YLPhotoCell: UICollectionViewCell {
         
         panGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoCell.pan(_:)))
         panGestureRecognizer.delegate = self
+        addGestureRecognizer(panGestureRecognizer)
         
         
         scrollView.delegate = self
@@ -94,10 +95,6 @@ class YLPhotoCell: UICollectionViewCell {
     
     // 慢移手势
     func pan(_ pan: UIPanGestureRecognizer) {
-        
-        if scrollView.zoomScale != 1 {
-            return
-        }
         
         let translation = pan.translation(in:  pan.view?.superview)
         
@@ -150,10 +147,6 @@ class YLPhotoCell: UICollectionViewCell {
         
         scrollView.setZoomScale(1, animated: false)
         scrollView.contentOffset.y = 0
-        
-        if gestureRecognizers?.contains(panGestureRecognizer) != true {
-            addGestureRecognizer(panGestureRecognizer)
-        }
         
         imageView.image = nil
         progressView.isHidden = true
@@ -213,12 +206,6 @@ extension YLPhotoCell: UIScrollViewDelegate {
     
     // 让UIImageView在UIScrollView缩放后居中显示
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        
-        if scrollView.zoomScale == 1 && gestureRecognizers?.contains(panGestureRecognizer) != true {
-            addGestureRecognizer(panGestureRecognizer)
-        }else if self.gestureRecognizers?.contains(panGestureRecognizer) == true {
-            removeGestureRecognizer(panGestureRecognizer)
-        }
         
         let size = scrollView.bounds.size
         
