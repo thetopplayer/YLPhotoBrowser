@@ -126,16 +126,25 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
         // 转场过渡的容器view
         if let containerView = transitionContext?.containerView {
             
+            // 过度的图片
+            let transitionImgView = transitionImageView ?? UIImageView.init(image: transitionImage)
+            transitionImgView.clipsToBounds = true
+            transitionImgView.frame = transitionBrowserImgFrame
+            containerView.addSubview(transitionImgView)
+            
             if transitionOriginalImgFrame == CGRect.zero ||
                 (transitionImage == nil && transitionImageView == nil) {
                 
                 UIView.animate(withDuration: 0.3, animations: { [weak self] in
                     
+                    transitionImgView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+                    transitionImgView.alpha = 0
                     self?.blackBgView?.alpha = 0
                     
                 }, completion: { [weak self] (finished:Bool) in
                     
                     self?.blackBgView?.removeFromSuperview()
+                    transitionImgView.removeFromSuperview()
                     
                     transitionContext?.completeTransition(!(transitionContext?.transitionWasCancelled)!)
                     
@@ -143,12 +152,6 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
                 
                 return
             }
-            
-            // 过度的图片
-            let transitionImgView = transitionImageView ?? UIImageView.init(image: transitionImage)
-            transitionImgView.clipsToBounds = true
-            transitionImgView.frame = transitionBrowserImgFrame
-            containerView.addSubview(transitionImgView)
             
             UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1, options: UIViewAnimationOptions.curveLinear, animations: { [weak self] in
                 
