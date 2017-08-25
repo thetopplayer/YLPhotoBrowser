@@ -18,6 +18,8 @@ class YLPhotoCell: UICollectionViewCell {
     
     var panGestureRecognizer: UIPanGestureRecognizer!
     var transitionImageViewFrame = CGRect.zero
+    var panBeginScaleX:CGFloat = 0
+    var panBeginScaleY:CGFloat = 0
     
     weak var delegate: YLPhotoCellDelegate?
     
@@ -65,6 +67,7 @@ class YLPhotoCell: UICollectionViewCell {
         
         panGestureRecognizer = UIPanGestureRecognizer.init(target: self, action: #selector(YLPhotoCell.pan(_:)))
         panGestureRecognizer.delegate = self
+        scrollView.addGestureRecognizer(panGestureRecognizer)
         
         
         scrollView.delegate = self
@@ -95,10 +98,6 @@ class YLPhotoCell: UICollectionViewCell {
     // 慢移手势
     func pan(_ pan: UIPanGestureRecognizer) {
         
-        if scrollView.zoomScale != 1 {
-            return
-        }
-        
         let translation = pan.translation(in:  pan.view?.superview)
         
         var scale = 1 - translation.y / YLScreenH
@@ -112,7 +111,21 @@ class YLPhotoCell: UICollectionViewCell {
         case .began:
             
             transitionImageViewFrame = imageView.frame
+            panBeginScaleX = pan.location(in: pan.view).x / transitionImageViewFrame.width
+            panBeginScaleY = pan.location(in: imageView).y / imageView.frame.height
             scrollView.delegate = nil
+            
+            if panBeginScaleX < 0 {
+                panBeginScaleX = 0
+            }else if panBeginScaleX > 1 {
+                panBeginScaleX = 1
+            }
+            
+            if panBeginScaleY < 0 {
+                panBeginScaleY = 0
+            }else if panBeginScaleY > 1 {
+                panBeginScaleY = 1
+            }
             
             delegate?.epPanGestureRecognizerBegin(pan)
             
@@ -121,8 +134,17 @@ class YLPhotoCell: UICollectionViewCell {
             
             imageView.frame.size = CGSize.init(width: transitionImageViewFrame.size.width * scale, height: transitionImageViewFrame.size.height * scale)
             
-            imageView.frame.origin = CGPoint.init(x: transitionImageViewFrame.origin.x + (transitionImageViewFrame.size.width - imageView.frame.size.width) / 2  + translation.x, y: transitionImageViewFrame.origin.y + translation.y)
-           
+            var frame = imageView.frame
+    
+            frame.origin.x = transitionImageViewFrame.origin.x + (transitionImageViewFrame.size.width -
+                imageView.frame.size.width ) * panBeginScaleX  + translation.x
+            
+            frame.origin.y = transitionImageViewFrame.origin.y + (transitionImageViewFrame.size.height -
+                imageView.frame.size.height ) * panBeginScaleY  + translation.y
+            
+            imageView.frame = frame
+            
+            
             break
         case .failed,.cancelled,.ended:
             
@@ -144,16 +166,12 @@ class YLPhotoCell: UICollectionViewCell {
             break
         }
     }
-
+    
     
     func updatePhoto(_ photo: YLPhoto) {
         
         scrollView.setZoomScale(1, animated: false)
         scrollView.contentOffset.y = 0
-        
-        if gestureRecognizers?.contains(panGestureRecognizer) != true {
-            addGestureRecognizer(panGestureRecognizer)
-        }
         
         imageView.image = nil
         progressView.isHidden = true
@@ -214,12 +232,6 @@ extension YLPhotoCell: UIScrollViewDelegate {
     // 让UIImageView在UIScrollView缩放后居中显示
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         
-        if scrollView.zoomScale == 1 && gestureRecognizers?.contains(panGestureRecognizer) != true {
-            addGestureRecognizer(panGestureRecognizer)
-        }else if self.gestureRecognizers?.contains(panGestureRecognizer) == true {
-            removeGestureRecognizer(panGestureRecognizer)
-        }
-        
         let size = scrollView.bounds.size
         
         let offsetX = (size.width > scrollView.contentSize.width) ?
@@ -266,7 +278,7 @@ extension YLPhotoCell: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         
         if gestureRecognizer is UIPanGestureRecognizer &&
-         otherGestureRecognizer is UIPanGestureRecognizer &&
+            otherGestureRecognizer is UIPanGestureRecognizer &&
             otherGestureRecognizer.view == scrollView {
             return true
         }
