@@ -109,14 +109,14 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         
         // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
         photoBrowser.getTransitionImageView = { (currentIndex: Int,image: UIImage?, isBack: Bool) -> UIView? in
-        
+            
             return nil
             
         }
         
         // 每张图片上的 View 视图
         photoBrowser.getViewOnTheBrowser = { [weak self] (currentIndex: Int) -> UIView? in
-        
+            
             let view = UIView()
             view.backgroundColor = UIColor.clear
             
@@ -152,7 +152,7 @@ extension ViewController: YLPhotoBrowserDelegate {
         var photo: YLPhoto?
         
         if let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0)) {
-        
+            
             let frame = collectionView.convert(cell.frame, to: collectionView.superview)
             
             if currentIndex <= 2 {
@@ -186,7 +186,7 @@ extension ViewController: YLPhotoBrowserDelegate {
                 // 其次
                 // photo = YLPhoto.addImage(nil, imageUrl: url, frame: frame)
             }
-        
+            
         }
         
         return photo ?? YLPhoto()
