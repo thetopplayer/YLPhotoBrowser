@@ -27,21 +27,22 @@ class ViewController: UIViewController {
                       "http://ww4.sinaimg.cn/bmiddle/7f02d774gw1f1dxhgmh3mj20cs1tdaiv.jpg"]
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: view.bounds.width / 3 - 10, height: view.bounds.width / 3 - 20)
+        layout.itemSize = CGSize(width: 90, height: 90)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 10
         
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         
         collectionView.backgroundColor = UIColor.clear
-        collectionView.isPagingEnabled = true
         
         collectionView.delegate = self
         collectionView.dataSource = self
         
         view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.addLayoutConstraint(toItem: view, edgeInsets: UIEdgeInsets.init(top: 64, left: 0, bottom: 0, right: 0))
         
     }
     
@@ -104,50 +105,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        var photos = [YLPhoto]()
-        
-        for i in 0...dataArray.count - 1 {
-            
-            let window = UIApplication.shared.keyWindow
-            
-            let cell = collectionView.cellForItem(at: IndexPath.init(row: i, section: 0))
-            
-            let rect1 = cell?.convert(cell?.frame ?? CGRect.zero, from: collectionView)
-            let rect2 = cell?.convert(rect1 ?? CGRect.zero, to: window)
-            
-            if i <= 2 {
-                
-                let imageName = dataArray[i]
-                
-                var image:UIImage?
-                
-                if i == 2 {
-                    // gif
-                    let path = Bundle.main.path(forResource: imageName, ofType: nil)
-                    let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
-                    image = UIImage.yl_gifWithData(data)
-                    
-                }else {
-                    // 非 gif
-                    image = UIImage.init(named: imageName)
-                }
-                
-                photos.append(YLPhoto.addImage(image, imageUrl: nil, frame: rect2))
-                
-            }else {
-                
-                let url = dataArray[i]
-                
-                 // 最佳
-                 let imageView:UIImageView? = cell?.viewWithTag(100) as! UIImageView?
-                 photos.append(YLPhoto.addImage(imageView?.image, imageUrl: url, frame: rect2))
-                
-                // 其次
-                // photos.append(YLPhoto.addImage(nil, imageUrl: url, frame: rect2))
-            }
-        }
-        
-        let photoBrowser = YLPhotoBrowser.init(photos, index: indexPath.row)
+        let photoBrowser = YLPhotoBrowser.init(indexPath.row, self)
         
         // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
         photoBrowser.getTransitionImageView = { (currentIndex: Int,image: UIImage?, isBack: Bool) -> UIView? in
@@ -179,5 +137,58 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
         
         present(photoBrowser, animated: true, completion: nil)
         
+    }
+}
+
+// MARK: - YLPhotoBrowserDelegate
+extension ViewController: YLPhotoBrowserDelegate {
+    
+    func epPhotoBrowserGetPhotoCount() -> Int {
+        return dataArray.count
+    }
+    
+    func epPhotoBrowserGetPhotoByCurrentIndex(_ currentIndex: Int) -> YLPhoto {
+        
+        var photo: YLPhoto?
+        
+        if let cell = collectionView.cellForItem(at: IndexPath.init(row: currentIndex, section: 0)) {
+        
+            let frame = collectionView.convert(cell.frame, to: collectionView.superview)
+            
+            if currentIndex <= 2 {
+                
+                let imageName = dataArray[currentIndex]
+                
+                var image:UIImage?
+                
+                if currentIndex == 2 {
+                    // gif
+                    let path = Bundle.main.path(forResource: imageName, ofType: nil)
+                    let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+                    image = UIImage.yl_gifWithData(data)
+                    
+                }else {
+                    // 非 gif
+                    image = UIImage.init(named: imageName)
+                }
+                
+                photo =  YLPhoto.addImage(image, imageUrl: nil, frame: frame)
+                
+            }else {
+                
+                let url = dataArray[currentIndex]
+                
+                // 最佳
+                let imageView:UIImageView? = cell.viewWithTag(100) as! UIImageView?
+                
+                photo = YLPhoto.addImage(imageView?.image, imageUrl: url, frame: frame)
+                
+                // 其次
+                // photo = YLPhoto.addImage(nil, imageUrl: url, frame: frame)
+            }
+        
+        }
+        
+        return photo ?? YLPhoto()
     }
 }

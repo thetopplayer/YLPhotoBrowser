@@ -96,7 +96,7 @@ class YLPhotoCell: UICollectionViewCell {
         
         let translation = pan.translation(in:  pan.view?.superview)
         
-        var scale = 1 - translation.y / YLScreenH
+        var scale = 1 - translation.y / self.frame.height
         
         scale = scale > 1 ? 1:scale
         scale = scale < 0 ? 0:scale
@@ -131,7 +131,7 @@ class YLPhotoCell: UICollectionViewCell {
             imageView.frame.size = CGSize.init(width: transitionImageViewFrame.size.width * scale, height: transitionImageViewFrame.size.height * scale)
             
             var frame = imageView.frame
-    
+            
             frame.origin.x = transitionImageViewFrame.origin.x + (transitionImageViewFrame.size.width -
                 imageView.frame.size.width ) * panBeginScaleX  + translation.x
             
@@ -176,8 +176,8 @@ class YLPhotoCell: UICollectionViewCell {
         
         if photo.imageUrl != "" {
             
-            imageView.frame.size = CGSize.init(width: YLScreenW, height: YLScreenW)
-            imageView.center = ImageViewCenter
+            imageView.frame.size = CGSize.init(width: frame.width, height: frame.width)
+            imageView.center = center
             
             imageView.image = photo.image
             

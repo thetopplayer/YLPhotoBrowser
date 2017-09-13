@@ -14,29 +14,33 @@ let PhotoBrowserBG = UIColor.black
 let ImageViewTag = 1000
 let CoverViewTag = 10000
 
-var ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
-var YLScreenW = UIScreen.main.bounds.width
-var YLScreenH = UIScreen.main.bounds.height
-
 public typealias GetTransitionImageView = (_ currentIndex: Int,_ image: UIImage?,_ isBack: Bool) -> (UIView?)
 
 public typealias GetViewOnTheBrowser = (_ currentIndex: Int) -> (UIView?)
 
+/// YLPhotoBrowserDelegate
+public protocol YLPhotoBrowserDelegate: NSObjectProtocol {
+    func epPhotoBrowserGetPhotoCount() -> Int
+    func epPhotoBrowserGetPhotoByCurrentIndex(_ currentIndex: Int) -> YLPhoto
+}
+
 public class YLPhotoBrowser: UIViewController {
     
-    // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
+    /// 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
     public var getTransitionImageView: GetTransitionImageView? {
         didSet {
-            if let photo = photos?[currentIndex] {
+            if let photo = getDataByCurrentIndex(currentIndex) {
                 editTransitioningDelegate(photo,isBack: false)
             }
         }
     }
-    
-    // 每张图片上的 View 视图
+    /// 每张图片上的 View 视图
     public var getViewOnTheBrowser: GetViewOnTheBrowser?
     
-    fileprivate var photos: [YLPhoto]? // 图片
+    weak var delegate: YLPhotoBrowserDelegate?
+    
+    var dataArray = [Int:YLPhoto]() // 数据源
+    
     fileprivate var currentIndex: Int = 0 // 当前row
     
     fileprivate var animatedTransition:YLAnimatedTransition? // 控制器动画
@@ -54,8 +58,8 @@ public class YLPhotoBrowser: UIViewController {
     
     deinit {
         removeObserver(self, forKeyPath: "view.frame")
-        getTransitionImageView = nil
-        animatedTransition = nil
+        dataArray.removeAll()
+        delegate = nil
     }
     
     // 是否支持屏幕旋转
@@ -64,29 +68,25 @@ public class YLPhotoBrowser: UIViewController {
     }
     
     // 初始化
-    public convenience init(_ photos: [YLPhoto],index: Int) {
+    public convenience init(_ index: Int,_ delegate: YLPhotoBrowserDelegate) {
         self.init()
         
-        self.photos = photos
-        self.currentIndex = index
+        currentIndex = index
+        self.delegate = delegate
         
-        let photo = photos[index]
+        let photo = getDataByCurrentIndex(currentIndex)
         
         animatedTransition = YLAnimatedTransition()
         transitioningDelegate = animatedTransition
         
-        editTransitioningDelegate(photo,isBack: false)
+        editTransitioningDelegate(photo!,isBack: false)
     }
     
     // 键盘 View frame 改变
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == "view.frame" {
-            
-            YLScreenW = view.bounds.width
-            YLScreenH = view.bounds.height
-            ImageViewCenter = CGPoint.init(x: YLScreenW / 2, y: YLScreenH / 2)
-            
+            dataArray.removeAll()
             collectionView.reloadData()
             DispatchQueue.main.async { [weak self] in
                 self?.collectionView.scrollToItem(at: IndexPath.init(row: self?.currentIndex ?? 0, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
@@ -140,12 +140,13 @@ public class YLPhotoBrowser: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.addLayoutConstraint(toItem: view, edgeInsets: UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0))
         
-        if (photos?.count)! > 1 {
+        let count = delegate?.epPhotoBrowserGetPhotoCount()
+        if count! > 1 {
             
             pageControl = UIPageControl()
             pageControl?.pageIndicatorTintColor = UIColor.lightGray
             pageControl?.currentPageIndicatorTintColor = UIColor.white
-            pageControl?.numberOfPages = (photos?.count)!
+            pageControl?.numberOfPages = count!
             pageControl?.currentPage = currentIndex
             pageControl?.backgroundColor = UIColor.clear
             
@@ -163,7 +164,7 @@ public class YLPhotoBrowser: UIViewController {
     // 单击手势
     func singleTap() {
         
-        if let photo = photos?[currentIndex]{
+        if let photo = getDataByCurrentIndex(currentIndex) {
             editTransitioningDelegate(photo,isBack: true)
             dismiss(animated: true, completion: nil)
         }
@@ -175,24 +176,24 @@ public class YLPhotoBrowser: UIViewController {
         if let imageView = getCurrentImageView(),
             let scrollView = imageView.superview as? UIScrollView,
             let image = imageView.image {
-        
+            
             if scrollView.zoomScale == 1 {
                 
                 var scale:CGFloat = 0
                 
-                if YLScreenW < YLScreenH {
+                if view.frame.width < view.frame.height {
                     let height = YLPhotoBrowser.getImageViewFrame(image.size).height
-                    if height >= YLScreenH {
+                    if height >= view.frame.height {
                         scale = 2
                     }else {
-                        scale = YLScreenH / height
+                        scale = view.frame.height / height
                     }
                 }else {
                     let width = YLPhotoBrowser.getImageViewFrame(image.size).width
-                    if width >= YLScreenW {
+                    if width >= view.frame.width {
                         scale = 2
                     }else {
-                        scale = YLScreenW / width
+                        scale = view.frame.width / width
                     }
                 }
                 
@@ -203,32 +204,37 @@ public class YLPhotoBrowser: UIViewController {
             }else {
                 scrollView.setZoomScale(1, animated: true)
             }
-        
+            
         }
     }
     
     // 获取imageView frame
     class func getImageViewFrame(_ size: CGSize) -> CGRect {
         
-        if size.width > YLScreenW {
-            let height = YLScreenW * (size.height / size.width)
-            if height <= YLScreenH {
+        let window = UIApplication.shared.keyWindow
+        
+        let w = window?.frame.width ?? UIScreen.main.bounds.width
+        let h = window?.frame.height ?? UIScreen.main.bounds.height
+        
+        if size.width > h {
+            let height = w * (size.height / size.width)
+            if height <= h {
                 
-                let frame = CGRect.init(x: 0, y: YLScreenH/2 - height/2, width: YLScreenW, height: height)
+                let frame = CGRect.init(x: 0, y: h/2 - height/2, width: w, height: height)
                 return frame
             }else {
                 
-                let frame = CGRect.init(x: 0, y: 0, width: YLScreenW, height: height)
+                let frame = CGRect.init(x: 0, y: 0, width: w, height: height)
                 return frame
                 
             }
         }else {
             
-            if size.height <= YLScreenH {
-                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: YLScreenH/2 - size.height/2, width: size.width, height: size.height)
+            if size.height <= h {
+                let frame = CGRect.init(x: w/2 - size.width/2, y: h/2 - size.height/2, width: size.width, height: size.height)
                 return frame
             }else {
-                let frame = CGRect.init(x: YLScreenW/2 - size.width/2, y: 0, width: size.width, height: size.height)
+                let frame = CGRect.init(x: w/2 - size.width/2, y: 0, width: size.width, height: size.height)
                 return frame
             }
             
@@ -273,12 +279,34 @@ public class YLPhotoBrowser: UIViewController {
         }else if photo.image != nil {
             transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame((photo.image?.size)!)
         }else {
-            transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
+            transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: view.frame.width, height: view.frame.width))
         }
         
         animatedTransition?.update(photo.image,transitionImageView: nil, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
         
     }
+    
+    // 获取数据源,并缓存数据
+    func getDataByCurrentIndex(_ index :Int) -> YLPhoto? {
+        if dataArray.keys.contains(index) {
+            return dataArray[index]
+        }else {
+            if let photo = delegate?.epPhotoBrowserGetPhotoByCurrentIndex(index) {
+                dataArray[index] = photo
+                
+                if dataArray.count > 5 {
+                    let keys = [Int](dataArray.keys).sorted()
+                    if abs(keys.first! - index) > abs(keys.last! - index) {
+                        dataArray.removeValue(forKey: keys.first!)
+                    }
+                }
+                return photo
+            }else {
+                return nil
+            }
+        }
+    }
+    
 }
 
 // MARK: - UICollectionViewDelegate,UICollectionViewDataSource
@@ -289,8 +317,8 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let photos = self.photos {
-            return photos.count
+        if let count = delegate?.epPhotoBrowserGetPhotoCount() {
+            return count
         }else {
             return 0
         }
@@ -300,7 +328,7 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
         
         let cell: YLPhotoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! YLPhotoCell
         
-        if let photo = photos?[indexPath.row] {
+        if let photo = getDataByCurrentIndex(indexPath.row) {
             
             cell.updatePhoto(photo)
             cell.delegate = self
@@ -324,21 +352,21 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize.init(width: YLScreenW, height: YLScreenH)
+        return CGSize.init(width: view.frame.width, height: view.frame.height)
     }
     
     // 已经停止减速
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
         if scrollView == collectionView {
-            currentIndex = Int(scrollView.contentOffset.x / YLScreenW)
+            currentIndex = Int(scrollView.contentOffset.x / view.frame.width)
             pageControl?.currentPage = currentIndex
         }
     }
 }
 
 extension YLPhotoBrowser: YLPhotoCellDelegate {
-
+    
     func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer, photo: YLPhoto) {
         
         animatedTransition?.transitionOriginalImgFrame = photo.frame
