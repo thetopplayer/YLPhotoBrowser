@@ -77,11 +77,7 @@ class YLPhotoCell: UICollectionViewCell {
         
         // scrollView 约束
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        let sConstraintsTop = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let sConstraintsLeft = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let sConstraintsRight = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let sConstraintsBottom = NSLayoutConstraint.init(item: scrollView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        NSLayoutConstraint.activate([sConstraintsTop,sConstraintsLeft,sConstraintsRight,sConstraintsBottom])
+        scrollView.addLayoutConstraint(toItem: self, edgeInsets: UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0))
         
         
         scrollView.addSubview(imageView)
@@ -90,11 +86,9 @@ class YLPhotoCell: UICollectionViewCell {
         
         // progressView 约束
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        let pConstraintsW = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 40)
-        let pConstraintsH = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 40)
-        let pConstraintsCX = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-        let pConstraintsCY = NSLayoutConstraint.init(item: progressView, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
-        NSLayoutConstraint.activate([pConstraintsW,pConstraintsH,pConstraintsCX,pConstraintsCY])
+        progressView.addLayoutConstraint(widthConstant: 40, heightConstant: 40)
+        progressView.addLayoutConstraint(attributes: [.centerX,.centerY], toItem: self, constants: [0,0])
+        
     }
     
     // 慢移手势

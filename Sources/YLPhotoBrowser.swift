@@ -138,11 +138,7 @@ public class YLPhotoBrowser: UIViewController {
         
         // collectionView 约束
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let cConstraintsTop = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 0)
-        let cConstraintsLeft = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.left, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.left, multiplier: 1, constant: 0)
-        let cConstraintsRight = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.right, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.right, multiplier: 1, constant: 0)
-        let cConstraintsBottom = NSLayoutConstraint.init(item: collectionView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: 0)
-        NSLayoutConstraint.activate([cConstraintsTop,cConstraintsLeft,cConstraintsRight,cConstraintsBottom])
+        collectionView.addLayoutConstraint(toItem: view, edgeInsets: UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0))
         
         if (photos?.count)! > 1 {
             
@@ -157,9 +153,7 @@ public class YLPhotoBrowser: UIViewController {
             
             // pageControl 约束
             pageControl?.translatesAutoresizingMaskIntoConstraints = false
-            let pConstraintsCenterX = NSLayoutConstraint.init(item: pageControl!, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-            let pConstraintsBottom = NSLayoutConstraint.init(item: pageControl!, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.bottom, multiplier: 1, constant: -30)
-            NSLayoutConstraint.activate([pConstraintsCenterX,pConstraintsBottom])
+            pageControl?.addLayoutConstraint(attributes: [.centerX,.bottom], toItem: view, constants: [0,-30])
             
         }
         

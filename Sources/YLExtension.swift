@@ -9,7 +9,7 @@
 import UIKit
 import ImageIO
 
-extension UIImage {
+public extension UIImage {
     /// 获取 YLImagePickerController.bundle 图片
     class func yl_imageName(_ name: String) -> UIImage? {
         
@@ -25,7 +25,7 @@ extension UIImage {
     }
     
     /// 获取gif
-    class func yl_gifWithData(_ data: Data) -> UIImage? {
+    public class func yl_gifWithData(_ data: Data) -> UIImage? {
         
         if let source: CGImageSource = CGImageSourceCreateWithData(data as CFData, nil) {
             
@@ -118,10 +118,10 @@ extension UIColor {
 
 
 // MARK: - 约束拓展
-extension UIView {
+public extension UIView {
     
     /// 宽或高(一条约束)
-    func addLayoutConstraint(attribute: NSLayoutAttribute,
+    public func addLayoutConstraint(attribute: NSLayoutAttribute,
                              constant: CGFloat) {
         
         let constraint = NSLayoutConstraint.init(item: self, attribute: attribute, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: constant)
@@ -130,13 +130,13 @@ extension UIView {
     }
     
     /// 宽高(两个约束)
-    func addLayoutConstraint(widthConstant: CGFloat,heightConstant: CGFloat) {
+    public func addLayoutConstraint(widthConstant: CGFloat,heightConstant: CGFloat) {
         addLayoutConstraint(attribute: NSLayoutAttribute.width, constant: widthConstant)
         addLayoutConstraint(attribute: NSLayoutAttribute.height, constant: heightConstant)
     }
     
     /// 与父视图相同的 NSLayoutAttribute(一条约束)
-    func addLayoutConstraint(attribute: NSLayoutAttribute,
+    public func addLayoutConstraint(attribute: NSLayoutAttribute,
                              toItem: Any,
                              constant: CGFloat) {
         
@@ -146,7 +146,7 @@ extension UIView {
     }
     
     /// 与父视图相同的 NSLayoutAttribute(多条约束)
-    func addLayoutConstraint(attributes: [NSLayoutAttribute],
+    public func addLayoutConstraint(attributes: [NSLayoutAttribute],
                              toItem: Any,
                              constants: [CGFloat]) {
         
@@ -158,7 +158,7 @@ extension UIView {
     }
     
     /// 与父视图相同或不相同的 NSLayoutAttribute(一条约束)
-    func addLayoutConstraint(attribute attr1: NSLayoutAttribute,
+    public func addLayoutConstraint(attribute attr1: NSLayoutAttribute,
                              toItem: Any,
                              attribute attr2: NSLayoutAttribute,
                              constant: CGFloat) {
@@ -169,7 +169,7 @@ extension UIView {
     }
     
     /// 与父视图相同或不相同的 NSLayoutAttribute(多条约束)
-    func addLayoutConstraint(attributes attr1s: [NSLayoutAttribute],
+    public func addLayoutConstraint(attributes attr1s: [NSLayoutAttribute],
                              toItem: Any,
                              attributes attr2s: [NSLayoutAttribute],
                              constants: [CGFloat]) {
@@ -182,7 +182,7 @@ extension UIView {
     }
     
     /// 根据 UIEdgeInsets (四条约束)
-    func addLayoutConstraint(toItem: Any,edgeInsets: UIEdgeInsets) {
+    public func addLayoutConstraint(toItem: Any,edgeInsets: UIEdgeInsets) {
         
         addLayoutConstraint(attribute: NSLayoutAttribute.top, toItem:toItem, constant: edgeInsets.top)
         addLayoutConstraint(attribute: NSLayoutAttribute.left,  toItem:toItem, constant: edgeInsets.left)

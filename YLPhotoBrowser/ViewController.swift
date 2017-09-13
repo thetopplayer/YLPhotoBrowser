@@ -84,8 +84,9 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             let imageName = dataArray[indexPath.row]
             
             if indexPath.row == 2 {
-                
-                imageView.image = UIImage.yl_gifAnimated(imageName)
+                let path = Bundle.main.path(forResource: imageName, ofType: nil)
+                let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+                imageView.image = UIImage.yl_gifWithData(data)
                 
             }else {
                 imageView.image = UIImage.init(named: imageName)
@@ -122,7 +123,9 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
                 
                 if i == 2 {
                     // gif
-                    image = UIImage.yl_gifAnimated(imageName)
+                    let path = Bundle.main.path(forResource: imageName, ofType: nil)
+                    let data = try! Data.init(contentsOf: URL.init(fileURLWithPath: path!))
+                    image = UIImage.yl_gifWithData(data)
                     
                 }else {
                     // 非 gif
@@ -165,10 +168,8 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             view.addSubview(label)
             // label 约束
             label.translatesAutoresizingMaskIntoConstraints = false
-            let lConstraintsCX = NSLayoutConstraint.init(item: label, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerX, multiplier: 1, constant: 0)
-            let lConstraintsTop = NSLayoutConstraint.init(item: label, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.top, multiplier: 1, constant: 40)
+            label.addLayoutConstraint(attributes: [.centerX,.top], toItem: view, constants: [0,40])
             
-            NSLayoutConstraint.activate([lConstraintsCX,lConstraintsTop])
             label.backgroundColor = UIColor.blue
             label.isUserInteractionEnabled = true
             label.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(ViewController.tap)))

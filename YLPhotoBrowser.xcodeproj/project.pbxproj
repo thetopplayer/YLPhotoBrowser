@@ -16,7 +16,6 @@
 		79829D9B1F26D83E009D3F61 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 79829D9A1F26D83E009D3F61 /* 2.png */; };
 		79A8C49A1F68D9A3004DD40C /* YLAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4911F68D9A3004DD40C /* YLAnimatedTransition.swift */; };
 		79A8C49B1F68D9A3004DD40C /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4921F68D9A3004DD40C /* YLDrivenInteractive.swift */; };
-		79A8C49C1F68D9A3004DD40C /* YLGifImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4931F68D9A3004DD40C /* YLGifImage.swift */; };
 		79A8C49D1F68D9A3004DD40C /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4941F68D9A3004DD40C /* YLPhoto.swift */; };
 		79A8C49E1F68D9A3004DD40C /* YLPhotoBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4951F68D9A3004DD40C /* YLPhotoBrowser.swift */; };
 		79A8C49F1F68D9A3004DD40C /* YLPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A8C4961F68D9A3004DD40C /* YLPhotoCell.swift */; };
@@ -38,7 +37,6 @@
 		79829D9A1F26D83E009D3F61 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		79A8C4911F68D9A3004DD40C /* YLAnimatedTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLAnimatedTransition.swift; sourceTree = "<group>"; };
 		79A8C4921F68D9A3004DD40C /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
-		79A8C4931F68D9A3004DD40C /* YLGifImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLGifImage.swift; sourceTree = "<group>"; };
 		79A8C4941F68D9A3004DD40C /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
 		79A8C4951F68D9A3004DD40C /* YLPhotoBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoBrowser.swift; sourceTree = "<group>"; };
 		79A8C4961F68D9A3004DD40C /* YLPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoCell.swift; sourceTree = "<group>"; };
@@ -105,7 +103,6 @@
 				79A8C4911F68D9A3004DD40C /* YLAnimatedTransition.swift */,
 				79A8C4A31F68DC4D004DD40C /* YLExtension.swift */,
 				79A8C4921F68D9A3004DD40C /* YLDrivenInteractive.swift */,
-				79A8C4931F68D9A3004DD40C /* YLGifImage.swift */,
 				79A8C4941F68D9A3004DD40C /* YLPhoto.swift */,
 				79A8C4951F68D9A3004DD40C /* YLPhotoBrowser.swift */,
 				79A8C4961F68D9A3004DD40C /* YLPhotoCell.swift */,
@@ -262,7 +259,6 @@
 			files = (
 				79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */,
 				79A8C49A1F68D9A3004DD40C /* YLAnimatedTransition.swift in Sources */,
-				79A8C49C1F68D9A3004DD40C /* YLGifImage.swift in Sources */,
 				79A8C49F1F68D9A3004DD40C /* YLPhotoCell.swift in Sources */,
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
 				79A8C4A21F68D9A3004DD40C /* YLPushAnimator.swift in Sources */,
