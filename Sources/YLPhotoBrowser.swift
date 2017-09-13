@@ -37,6 +37,9 @@ public class YLPhotoBrowser: UIViewController {
     /// 每张图片上的 View 视图
     public var getViewOnTheBrowser: GetViewOnTheBrowser?
     
+    /// 用于遮挡原来图片的View的背景色
+    public var originalCoverViewBG = UIColor.clear
+    
     weak var delegate: YLPhotoBrowserDelegate?
     
     var dataArray = [Int:YLPhoto]() // 数据源
@@ -97,8 +100,9 @@ public class YLPhotoBrowser: UIViewController {
     override public func viewDidLoad() {
         
         view.backgroundColor = PhotoBrowserBG
-        
         view.isUserInteractionEnabled = true
+        
+        animatedTransition?.originalCoverViewBG = originalCoverViewBG
         
         let singleTap = UITapGestureRecognizer.init(target: self, action: #selector(YLPhotoBrowser.singleTap))
         view.addGestureRecognizer(singleTap)

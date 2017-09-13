@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YLPhotoBrowser_Swift
+//import YLPhotoBrowser_Swift
 
 class ViewController: UIViewController {
     
@@ -106,6 +106,8 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let photoBrowser = YLPhotoBrowser.init(indexPath.row, self)
+        // 用白色 遮挡 原来的图
+        photoBrowser.originalCoverViewBG = UIColor.white
         
         // 非矩形图片需要实现(比如聊天界面带三角形的图片) 默认是矩形图片
         photoBrowser.getTransitionImageView = { (currentIndex: Int,image: UIImage?, isBack: Bool) -> UIView? in
