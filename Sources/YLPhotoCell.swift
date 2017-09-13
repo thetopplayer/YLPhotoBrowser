@@ -10,8 +10,8 @@ import UIKit
 import Kingfisher
 
 protocol YLPhotoCellDelegate :NSObjectProtocol {
-    func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer)
-    func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect)
+    func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer,photo: YLPhoto)
+    func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect,photo: YLPhoto)
 }
 
 class YLPhotoCell: UICollectionViewCell {
@@ -22,6 +22,8 @@ class YLPhotoCell: UICollectionViewCell {
     var panBeginScaleY:CGFloat = 0
     
     weak var delegate: YLPhotoCellDelegate?
+    
+    var photo: YLPhoto!
     
     let scrollView: UIScrollView = {
         let sv = UIScrollView(frame: CGRect.zero)
@@ -127,7 +129,7 @@ class YLPhotoCell: UICollectionViewCell {
                 panBeginScaleY = 1
             }
             
-            delegate?.epPanGestureRecognizerBegin(pan)
+            delegate?.epPanGestureRecognizerBegin(pan,photo: self.photo)
             
             break
         case .changed:
@@ -159,9 +161,9 @@ class YLPhotoCell: UICollectionViewCell {
             }else {
                 
                 imageView.isHidden = true
-                delegate?.epPanGestureRecognizerEnd(imageView.frame)
-                
             }
+            
+            delegate?.epPanGestureRecognizerEnd(imageView.frame,photo: self.photo)
             
             break
         }
@@ -169,6 +171,8 @@ class YLPhotoCell: UICollectionViewCell {
     
     
     func updatePhoto(_ photo: YLPhoto) {
+        
+        self.photo = photo
         
         scrollView.setZoomScale(1, animated: false)
         scrollView.contentOffset.y = 0

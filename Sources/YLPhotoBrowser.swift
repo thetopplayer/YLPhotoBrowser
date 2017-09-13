@@ -39,8 +39,7 @@ public class YLPhotoBrowser: UIViewController {
     fileprivate var photos: [YLPhoto]? // 图片
     fileprivate var currentIndex: Int = 0 // 当前row
     
-    fileprivate var appearAnimatedTransition:YLAnimatedTransition? // 进来的动画
-    fileprivate var disappearAnimatedTransition:YLAnimatedTransition? // 出去的动画
+    fileprivate var animatedTransition:YLAnimatedTransition? // 控制器动画
     
     var collectionView:UICollectionView!
     fileprivate var pageControl:UIPageControl?
@@ -49,14 +48,14 @@ public class YLPhotoBrowser: UIViewController {
     override public func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        disappearAnimatedTransition = nil
+        animatedTransition = nil
+        transitioningDelegate = nil
     }
     
     deinit {
         removeObserver(self, forKeyPath: "view.frame")
         getTransitionImageView = nil
-        transitioningDelegate = nil
-        appearAnimatedTransition = nil
+        animatedTransition = nil
     }
     
     // 是否支持屏幕旋转
@@ -72,6 +71,9 @@ public class YLPhotoBrowser: UIViewController {
         self.currentIndex = index
         
         let photo = photos[index]
+        
+        animatedTransition = YLAnimatedTransition()
+        transitioningDelegate = animatedTransition
         
         editTransitioningDelegate(photo,isBack: false)
     }
@@ -280,11 +282,7 @@ public class YLPhotoBrowser: UIViewController {
             transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: YLScreenW, height: YLScreenW))
         }
         
-        appearAnimatedTransition = nil
-        let imageView = getTransitionImageView?(currentIndex,photo.image,isBack)
-        appearAnimatedTransition = YLAnimatedTransition.init(photo.image,transitionImageView: imageView, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
-        
-        self.transitioningDelegate = appearAnimatedTransition
+        animatedTransition?.update(photo.image,transitionImageView: nil, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
         
     }
 }
@@ -347,25 +345,18 @@ extension YLPhotoBrowser:UICollectionViewDelegate,UICollectionViewDataSource,UIC
 
 extension YLPhotoBrowser: YLPhotoCellDelegate {
 
-    func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer) {
+    func epPanGestureRecognizerBegin(_ pan: UIPanGestureRecognizer, photo: YLPhoto) {
         
-        disappearAnimatedTransition = nil
-        disappearAnimatedTransition = YLAnimatedTransition()
-        disappearAnimatedTransition?.gestureRecognizer = pan
-        self.transitioningDelegate = disappearAnimatedTransition
+        animatedTransition?.transitionOriginalImgFrame = photo.frame
+        animatedTransition?.gestureRecognizer = pan
         
         dismiss(animated: true, completion: nil)
         
     }
     
-    func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect) {
+    func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect, photo: YLPhoto) {
         
-        let imageView = getTransitionImageView?(currentIndex,photos?[currentIndex].image,true)
-        disappearAnimatedTransition?.transitionImage = photos?[currentIndex].image
-        disappearAnimatedTransition?.transitionImageView = imageView
-        disappearAnimatedTransition?.transitionBrowserImgFrame = currentImageViewFrame
-        disappearAnimatedTransition?.transitionOriginalImgFrame = photos?[currentIndex].frame ?? CGRect.zero
-        
+        animatedTransition?.gestureRecognizer = nil
+        animatedTransition?.update(photo.image,transitionImageView: nil, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: currentImageViewFrame)
     }
-    
 }
