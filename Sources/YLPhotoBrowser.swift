@@ -220,7 +220,7 @@ public class YLPhotoBrowser: UIViewController {
         let w = window?.frame.width ?? UIScreen.main.bounds.width
         let h = window?.frame.height ?? UIScreen.main.bounds.height
         
-        if size.width > h {
+        if size.width > w {
             let height = w * (size.height / size.width)
             if height <= h {
                 
