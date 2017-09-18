@@ -286,7 +286,8 @@ public class YLPhotoBrowser: UIViewController {
             transitionBrowserImgFrame = YLPhotoBrowser.getImageViewFrame(CGSize.init(width: view.frame.width, height: view.frame.width))
         }
         
-        animatedTransition?.update(photo.image,transitionImageView: nil, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
+        let transitionImageView = getTransitionImageView?(currentIndex,photo.image,isBack)
+        animatedTransition?.update(photo.image,transitionImageView: transitionImageView, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: transitionBrowserImgFrame)
         
     }
     
@@ -383,6 +384,7 @@ extension YLPhotoBrowser: YLPhotoCellDelegate {
     func epPanGestureRecognizerEnd(_ currentImageViewFrame: CGRect, photo: YLPhoto) {
         
         animatedTransition?.gestureRecognizer = nil
-        animatedTransition?.update(photo.image,transitionImageView: nil, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: currentImageViewFrame)
+        let transitionImageView = getTransitionImageView?(currentIndex,photo.image,true)
+        animatedTransition?.update(photo.image,transitionImageView: transitionImageView, transitionOriginalImgFrame: photo.frame, transitionBrowserImgFrame: currentImageViewFrame)
     }
 }

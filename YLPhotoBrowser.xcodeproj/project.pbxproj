@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		4FAB20FFC845CE2DB099F594 /* Pods_YLPhotoBrowser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8A7DF9E07E129770E987270 /* Pods_YLPhotoBrowser.framework */; };
+		79140D3D1F6F6CA200115648 /* YLAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D341F6F6CA200115648 /* YLAnimatedTransition.swift */; };
+		79140D3E1F6F6CA200115648 /* YLDrivenInteractive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D351F6F6CA200115648 /* YLDrivenInteractive.swift */; };
+		79140D3F1F6F6CA200115648 /* YLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D361F6F6CA200115648 /* YLExtension.swift */; };
+		79140D401F6F6CA200115648 /* YLPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D371F6F6CA200115648 /* YLPhoto.swift */; };
+		79140D411F6F6CA200115648 /* YLPhotoBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D381F6F6CA200115648 /* YLPhotoBrowser.swift */; };
+		79140D421F6F6CA200115648 /* YLPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D391F6F6CA200115648 /* YLPhotoCell.swift */; };
+		79140D431F6F6CA200115648 /* YLPhotoProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D3A1F6F6CA200115648 /* YLPhotoProgressView.swift */; };
+		79140D441F6F6CA200115648 /* YLPopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D3B1F6F6CA200115648 /* YLPopAnimator.swift */; };
+		79140D451F6F6CA200115648 /* YLPushAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79140D3C1F6F6CA200115648 /* YLPushAnimator.swift */; };
 		793A891C1F2841A600329CA8 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 793A891B1F2841A600329CA8 /* 1.png */; };
 		79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D871F26D5A7009D3F61 /* AppDelegate.swift */; };
 		79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79829D891F26D5A7009D3F61 /* ViewController.swift */; };
@@ -18,6 +27,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		79140D341F6F6CA200115648 /* YLAnimatedTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLAnimatedTransition.swift; sourceTree = "<group>"; };
+		79140D351F6F6CA200115648 /* YLDrivenInteractive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLDrivenInteractive.swift; sourceTree = "<group>"; };
+		79140D361F6F6CA200115648 /* YLExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLExtension.swift; sourceTree = "<group>"; };
+		79140D371F6F6CA200115648 /* YLPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhoto.swift; sourceTree = "<group>"; };
+		79140D381F6F6CA200115648 /* YLPhotoBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoBrowser.swift; sourceTree = "<group>"; };
+		79140D391F6F6CA200115648 /* YLPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoCell.swift; sourceTree = "<group>"; };
+		79140D3A1F6F6CA200115648 /* YLPhotoProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPhotoProgressView.swift; sourceTree = "<group>"; };
+		79140D3B1F6F6CA200115648 /* YLPopAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPopAnimator.swift; sourceTree = "<group>"; };
+		79140D3C1F6F6CA200115648 /* YLPushAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YLPushAnimator.swift; sourceTree = "<group>"; };
 		793A891B1F2841A600329CA8 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		79829D841F26D5A7009D3F61 /* YLPhotoBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YLPhotoBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79829D871F26D5A7009D3F61 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +63,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		79140D331F6F6CA200115648 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				79140D341F6F6CA200115648 /* YLAnimatedTransition.swift */,
+				79140D351F6F6CA200115648 /* YLDrivenInteractive.swift */,
+				79140D361F6F6CA200115648 /* YLExtension.swift */,
+				79140D371F6F6CA200115648 /* YLPhoto.swift */,
+				79140D381F6F6CA200115648 /* YLPhotoBrowser.swift */,
+				79140D391F6F6CA200115648 /* YLPhotoCell.swift */,
+				79140D3A1F6F6CA200115648 /* YLPhotoProgressView.swift */,
+				79140D3B1F6F6CA200115648 /* YLPopAnimator.swift */,
+				79140D3C1F6F6CA200115648 /* YLPushAnimator.swift */,
+			);
+			path = Sources;
+			sourceTree = SOURCE_ROOT;
+		};
 		79829D7B1F26D5A7009D3F61 = {
 			isa = PBXGroup;
 			children = (
@@ -68,6 +102,7 @@
 			children = (
 				79829D871F26D5A7009D3F61 /* AppDelegate.swift */,
 				79829D891F26D5A7009D3F61 /* ViewController.swift */,
+				79140D331F6F6CA200115648 /* Sources */,
 				79829D9A1F26D83E009D3F61 /* 2.png */,
 				793A891B1F2841A600329CA8 /* 1.png */,
 				81E56E601F28CF8300CE9DEA /* 3.gif */,
@@ -223,7 +258,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				79829D8A1F26D5A7009D3F61 /* ViewController.swift in Sources */,
+				79140D3D1F6F6CA200115648 /* YLAnimatedTransition.swift in Sources */,
 				79829D881F26D5A7009D3F61 /* AppDelegate.swift in Sources */,
+				79140D421F6F6CA200115648 /* YLPhotoCell.swift in Sources */,
+				79140D3F1F6F6CA200115648 /* YLExtension.swift in Sources */,
+				79140D451F6F6CA200115648 /* YLPushAnimator.swift in Sources */,
+				79140D431F6F6CA200115648 /* YLPhotoProgressView.swift in Sources */,
+				79140D411F6F6CA200115648 /* YLPhotoBrowser.swift in Sources */,
+				79140D3E1F6F6CA200115648 /* YLDrivenInteractive.swift in Sources */,
+				79140D401F6F6CA200115648 /* YLPhoto.swift in Sources */,
+				79140D441F6F6CA200115648 /* YLPopAnimator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

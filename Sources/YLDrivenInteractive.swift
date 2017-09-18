@@ -141,9 +141,8 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             
             // 过度的图片
             let transitionImgView = transitionImageView ?? UIImageView.init(image: transitionImage)
-            transitionImgView.clipsToBounds = true
-            transitionImgView.contentMode = UIViewContentMode.scaleAspectFill
             transitionImgView.frame = transitionBrowserImgFrame
+            transitionImageView?.layoutIfNeeded()
             containerView.addSubview(transitionImgView)
             
             if transitionOriginalImgFrame == CGRect.zero ||
@@ -171,6 +170,7 @@ class YLDrivenInteractive: UIPercentDrivenInteractiveTransition {
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
                 
                 transitionImgView.frame = (self?.transitionOriginalImgFrame)!
+                self?.transitionImageView?.layoutIfNeeded()
                 self?.blackBgView?.alpha = 0
                 
             }) { [weak self] (finished: Bool) in
