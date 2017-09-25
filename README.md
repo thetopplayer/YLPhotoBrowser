@@ -13,7 +13,7 @@
 # 导入
 
 ```swift
-pod 'YLPhotoBrowser-Swift' 
+pod 'YLPhotoBrowser-Swift', '~> 0.2.3'
 ```
 
 # 使用 
