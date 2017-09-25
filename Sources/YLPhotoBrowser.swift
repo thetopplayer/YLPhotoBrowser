@@ -166,7 +166,7 @@ public class YLPhotoBrowser: UIViewController {
     }
     
     // 单击手势
-    func singleTap() {
+    @objc func singleTap() {
         
         if let photo = getDataByCurrentIndex(currentIndex) {
             editTransitioningDelegate(photo,isBack: true)
@@ -175,7 +175,7 @@ public class YLPhotoBrowser: UIViewController {
     }
     
     // 双击手势
-    func doubleTap() {
+    @objc func doubleTap() {
         
         if let imageView = getCurrentImageView(),
             let scrollView = imageView.superview as? UIScrollView,

@@ -51,7 +51,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func tap() {
+    @objc func tap() {
         print("点击")
     }
     

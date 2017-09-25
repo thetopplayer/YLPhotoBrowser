@@ -92,7 +92,7 @@ class YLPhotoCell: UICollectionViewCell {
     }
     
     // 慢移手势
-    func pan(_ pan: UIPanGestureRecognizer) {
+    @objc func pan(_ pan: UIPanGestureRecognizer) {
         
         let translation = pan.translation(in:  pan.view?.superview)
         
