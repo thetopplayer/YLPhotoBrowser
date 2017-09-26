@@ -12,7 +12,7 @@
 
 # 导入
 
-```swift
+```objective-c
 pod 'YLPhotoBrowser-Swift', '~> 0.0.1'
 ```
 
