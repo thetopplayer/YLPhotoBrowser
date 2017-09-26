@@ -40,8 +40,8 @@ class ViewController: UIViewController {
         collectionView.dataSource = self
         
         view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.addLayoutConstraint(toItem: view, edgeInsets: UIEdgeInsets.init(top: 64, left: 0, bottom: 0, right: 0))
+
+        collectionView.addConstraints(toItem: view, edgeInsets: .init(top: 64, left: 0, bottom: 0, right: 0))
         
     }
     
@@ -126,8 +126,7 @@ extension ViewController:UICollectionViewDelegate,UICollectionViewDataSource {
             label.textColor = UIColor.red
             view.addSubview(label)
             // label 约束
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.addLayoutConstraint(attributes: [.centerX,.top], toItem: view, constants: [0,40])
+            label.addConstraints(attributes: [.centerX,.top], toItem: view, attributes: nil, constants: [0,40])
             
             label.backgroundColor = UIColor.blue
             label.isUserInteractionEnabled = true

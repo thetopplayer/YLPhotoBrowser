@@ -130,6 +130,12 @@ public class YLPhotoBrowser: UIViewController {
         
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         
+        if #available(iOS 11.0, *) {
+            collectionView.contentInsetAdjustmentBehavior = .never
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = false
+        }
+        
         collectionView.register(YLPhotoCell.self, forCellWithReuseIdentifier: "cell")
         
         collectionView.backgroundColor = UIColor.clear
@@ -141,8 +147,7 @@ public class YLPhotoBrowser: UIViewController {
         view.addSubview(collectionView)
         
         // collectionView 约束
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.addLayoutConstraint(toItem: view, edgeInsets: UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0))
+        collectionView.addConstraints(toItem: view, edgeInsets: .init(top: 0, left: 0, bottom: 0, right: 0))
         
         let count = delegate?.epPhotoBrowserGetPhotoCount()
         if count! > 1 {
@@ -157,8 +162,7 @@ public class YLPhotoBrowser: UIViewController {
             view.addSubview(pageControl!)
             
             // pageControl 约束
-            pageControl?.translatesAutoresizingMaskIntoConstraints = false
-            pageControl?.addLayoutConstraint(attributes: [.centerX,.bottom], toItem: view, constants: [0,-30])
+            pageControl?.addConstraints(attributes: [.centerX,.bottom], toItem: view, attributes: nil, constants: [0,-30])
             
         }
         
