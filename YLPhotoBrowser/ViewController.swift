@@ -181,10 +181,10 @@ extension ViewController: YLPhotoBrowserDelegate {
                 // 最佳
                 let imageView:UIImageView? = cell.viewWithTag(100) as! UIImageView?
                 
-                photo = YLPhoto.addImage(imageView?.image, imageUrl: url, frame: frame)
+//                photo = YLPhoto.addImage(imageView?.image, imageUrl: url, frame: frame)
                 
                 // 其次
-                // photo = YLPhoto.addImage(nil, imageUrl: url, frame: frame)
+                 photo = YLPhoto.addImage(nil, imageUrl: url, frame: frame)
             }
             
         }
